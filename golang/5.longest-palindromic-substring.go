@@ -9,44 +9,28 @@ func longestPalindrome(s string) string {
 	if len(s) <= 1 {
 		return s
 	}
+	sList := strings.Split(s, "")
+	s = " " + strings.Join(sList, " ") + " "
 	var startPos, endPos, length int
-	indexMap := map[rune][]int{}
-	for index, r := range s {
-		indexs, bHas := indexMap[r]
-		if !bHas {
-			indexs = []int{}
+	for i := 0; i < len(s); i++ {
+		var si, ei int
+		for si, ei = i-1, i+1; si >= 0 && ei < len(s); si, ei = si-1, ei+1 {
+			if s[si] != s[ei] {
+				break
+			}
 		}
-		indexs = append(indexs, index)
-		indexMap[r] = indexs
-	}
-	for index, r := range s {
-		indexs, _ := indexMap[r]
-		if len(indexs) < 2 {
-			continue
-		}
-		newIndexs := []int{}
-		for _, pos := range indexs {
-			if pos <= index {
-				continue
-			}
-			newIndexs = append(newIndexs, pos)
-			isPalindrome := true
-			for sp, ep := index+1, pos-1; sp < ep; sp, ep = sp+1, ep-1 {
-				if s[sp] != s[ep] {
-					isPalindrome = false
-					break
-				}
-			}
-			if isPalindrome {
-				if length < pos-index+1 {
-					length = pos - index + 1
-					startPos = index
-					endPos = pos
-				}
-			}
+		si++
+		ei--
+		if length < ei-si+1 {
+			length = ei - si + 1
+			startPos = si
+			endPos = ei
 		}
 	}
-	return s[startPos : endPos+1]
+	s = s[startPos : endPos+1]
+	sList = strings.Split(s, " ")
+	s = strings.Join(sList, "")
+	return s
 }
 // @lc code=end
 
